@@ -36,10 +36,13 @@ public class PacienteResource {
 
     // Atualizar
     @PUT
+    @Path("/{idPaciente}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response atualizarRs(Paciente paciente, @PathParam("cpf") String cpf) throws ClassNotFoundException, SQLException {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response atualizarRs(@PathParam("idPaciente") int id, Paciente paciente) throws ClassNotFoundException, SQLException {
+        paciente.setIdPaciente(id); // garante que o paciente a ser atualizado tenha o ID correto
         pacienteBO.atualizarBo(paciente);
-        return Response.ok().build();
+        return Response.ok(paciente).build();
     }
 
     // Deletar
