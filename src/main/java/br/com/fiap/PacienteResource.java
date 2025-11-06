@@ -36,11 +36,11 @@ public class PacienteResource {
 
     // Atualizar
     @PUT
-    @Path("/{idPaciente}")
+    @Path("/{cpf}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response atualizarRs(@PathParam("idPaciente") int id, Paciente paciente) throws ClassNotFoundException, SQLException {
-        paciente.setIdPaciente(id); // garante que o paciente a ser atualizado tenha o ID correto
+    public Response atualizarRs(@PathParam("cpf") String cpf, Paciente paciente) throws ClassNotFoundException, SQLException {
+        paciente.setCpf(cpf); // garante que o paciente a ser atualizado tenha o ID correto
         pacienteBO.atualizarBo(paciente);
         return Response.ok(paciente).build();
     }
@@ -48,7 +48,7 @@ public class PacienteResource {
     // Deletar
     @DELETE
     @Path("/{cpf}")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response deletarRs(@PathParam("cpf") String cpf) throws ClassNotFoundException, SQLException {
         pacienteBO.deletarBo(cpf);
         return Response.ok().build();
