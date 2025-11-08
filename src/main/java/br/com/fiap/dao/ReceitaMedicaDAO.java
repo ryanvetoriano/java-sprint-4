@@ -4,46 +4,40 @@ import br.com.fiap.beans.Paciente;
 import br.com.fiap.beans.ReceitaMedica;
 import br.com.fiap.conexoes.ConexaoFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReceitaMedicaDAO {
 
-    public Connection minhaConexao;
+    private Connection minhaConexao;
 
     public ReceitaMedicaDAO() throws SQLException, ClassNotFoundException {
         this.minhaConexao = new ConexaoFactory().conexao();
     }
 
-    public String insert(ReceitaMedica receitaMedica) throws SQLException {
-        PreparedStatement stmt = minhaConexao.prepareStatement(
-                "INSERT INTO RECEITA_MEDICA (DATA_EMISSAO, MEDICAMENTO, DOSAGEM, FREQUENCIA, DURACAO, ID_PACIENTE) VALUES (?, ?, ?, ?, ?, ?)"
-        );
-        stmt.setDate(1, java.sql.Date.valueOf(receitaMedica.getDataEmissao()));
-        stmt.setString(2, receitaMedica.getMedicamento());
-        stmt.setString(3, receitaMedica.getDosagem());
-        stmt.setString(4, receitaMedica.getFrquencia());
-        stmt.setString(5, receitaMedica.getDuracao());
-        stmt.setInt(6, receitaMedica.getPaciente().getIdPaciente());
-
+    public String insert(ReceitaMedica receita) throws SQLException {
+        String sql = "INSERT INTO RECEITA_MEDICA (DATA_EMISSAO, MEDICAMENTO, DOSAGEM, FREQUENCIA, DURACAO, ID_PACIENTE) VALUES (?, ?, ?, ?, ?, ?)";
+        PreparedStatement stmt = minhaConexao.prepareStatement(sql);
+        stmt.setDate(1, java.sql.Date.valueOf(receita.getDataEmissao()));
+        stmt.setString(2, receita.getMedicamento());
+        stmt.setString(3, receita.getDosagem());
+        stmt.setString(4, receita.getFrquencia());
+        stmt.setString(5, receita.getDuracao());
+        stmt.setInt(6, receita.getPaciente().getIdPaciente());
         stmt.execute();
         stmt.close();
-
-        return "Receita Médica cadastrada com sucesso!";
+        return "Receita médica cadastrada com sucesso!";
     }
 
     public List<ReceitaMedica> receitasPaciente(int idPaciente) throws SQLException {
-        List<ReceitaMedica> listaReceita = new ArrayList<>();
+        List<ReceitaMedica> lista = new ArrayList<>();
         String sql = "SELECT r.ID_RECEITA, r.DATA_EMISSAO, r.MEDICAMENTO, r.DOSAGEM, r.FREQUENCIA, r.DURACAO, " +
                 "p.ID_PACIENTE, p.NOME_PACIENTE " +
                 "FROM RECEITA_MEDICA r " +
                 "JOIN PACIENTE p ON r.ID_PACIENTE = p.ID_PACIENTE " +
                 "WHERE r.ID_PACIENTE = ? " +
-                "ORDER BY r.DATA_EMISSAO";
+                "ORDER BY r.DATA_EMISSAO DESC";
 
         PreparedStatement ps = minhaConexao.prepareStatement(sql);
         ps.setInt(1, idPaciente);
@@ -65,44 +59,35 @@ public class ReceitaMedicaDAO {
                     p
             );
 
-            r.setIdReceita(rs.getInt("ID_RECEITA"));
-            listaReceita.add(r);
+            lista.add(r);
         }
 
         rs.close();
         ps.close();
-        return listaReceita;
+        return lista;
+    }
+
+    public String update(ReceitaMedica receita) throws SQLException {
+        String sql = "UPDATE RECEITA_MEDICA SET DATA_EMISSAO = ?, MEDICAMENTO = ?, DOSAGEM = ?, FREQUENCIA = ?, DURACAO = ?, ID_PACIENTE = ? WHERE ID_RECEITA = ?";
+        PreparedStatement stmt = minhaConexao.prepareStatement(sql);
+        stmt.setDate(1, java.sql.Date.valueOf(receita.getDataEmissao()));
+        stmt.setString(2, receita.getMedicamento());
+        stmt.setString(3, receita.getDosagem());
+        stmt.setString(4, receita.getFrquencia());
+        stmt.setString(5, receita.getDuracao());
+        stmt.setInt(6, receita.getPaciente().getIdPaciente());
+        stmt.setInt(7, receita.getIdReceita());
+        stmt.executeUpdate();
+        stmt.close();
+        return "Receita médica atualizada com sucesso!";
     }
 
     public String delete(int idReceita) throws SQLException {
-        PreparedStatement stmt =
-                minhaConexao.prepareStatement("Delete from RECEITA_MEDICA where ID_RECEITA = ?");
+        String sql = "DELETE FROM RECEITA_MEDICA WHERE ID_RECEITA = ?";
+        PreparedStatement stmt = minhaConexao.prepareStatement(sql);
         stmt.setInt(1, idReceita);
-
         stmt.execute();
         stmt.close();
-
-        return "Receita Médica deletada com sucesso!";
+        return "Receita médica deletada com sucesso!";
     }
-
-    public String update(ReceitaMedica receitaMedica) throws SQLException {
-        PreparedStatement stmt = minhaConexao.prepareStatement(
-                "UPDATE RECEITA_MEDICA SET DATA_EMISSAO = ?, MEDICAMENTO = ?, DOSAGEM = ?, FREQUENCIA = ?, DURACAO = ?, ID_PACIENTE = ? " +
-                        "WHERE ID_RECEITA = ?"
-        );
-
-        stmt.setDate(1, java.sql.Date.valueOf(receitaMedica.getDataEmissao()));
-        stmt.setString(2, receitaMedica.getMedicamento());
-        stmt.setString(3, receitaMedica.getDosagem());
-        stmt.setString(4, receitaMedica.getFrquencia());
-        stmt.setString(5, receitaMedica.getDuracao());
-        stmt.setInt(6, receitaMedica.getPaciente().getIdPaciente());
-
-        stmt.executeUpdate();
-        stmt.close();
-
-        return "Receita Médica atualizada com sucesso!";
-
-    }
-
 }
