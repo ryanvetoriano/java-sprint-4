@@ -26,6 +26,13 @@ public class ExameResource {
         return exameBO.selecionarBo(idPaciente);
     }
 
+    // Buscar exame por ID (para edição ou visualização)
+    @GET
+    @Path("/detalhe/{idExame}")
+    public Exame buscarExame(@PathParam("idExame") int idExame) throws SQLException {
+        return exameBO.buscarPorId(idExame);
+    }
+
     // Inserir novo exame
     @POST
     public Response inserirExame(Exame exame, @QueryParam("idPaciente") int idPaciente, @Context UriInfo uriInfo) throws SQLException {
@@ -39,7 +46,7 @@ public class ExameResource {
     @PUT
     public Response atualizarExame(Exame exame) throws SQLException {
         exameBO.atualizarBo(exame);
-        return Response.ok().build();
+        return Response.ok(exameBO.buscarPorId(exame.getIdExame())).build();
     }
 
     // Deletar exame

@@ -2,6 +2,7 @@ package br.com.fiap.bo;
 
 import br.com.fiap.beans.Exame;
 import br.com.fiap.dao.ExameDAO;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class ExameBO {
         exameDAO.update(exame);
     }
 
-    // Deletar exame
+    // Deletar exame (verifica se pertence ao paciente)
     public void deletarBo(int idExame, int idPaciente) throws SQLException {
         List<Exame> exames = selecionarBo(idPaciente);
         boolean pertence = exames.stream().anyMatch(e -> e.getIdExame() == idExame);
@@ -39,5 +40,10 @@ public class ExameBO {
         } else {
             throw new SQLException("Exame não pertence ao paciente logado.");
         }
+    }
+
+    // Buscar exame por ID
+    public Exame buscarPorId(int idExame) throws SQLException {
+        return exameDAO.buscarPorId(idExame);
     }
 }
