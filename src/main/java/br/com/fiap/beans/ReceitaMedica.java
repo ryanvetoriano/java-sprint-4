@@ -10,14 +10,14 @@ public class ReceitaMedica {
     private LocalDate dataEmissao;
     private String medicamento;
     private String dosagem;
-    private String frquencia;
+    private String frequencia;
     private String duracao;
 
     public ReceitaMedica(LocalDate dataEmissao, String medicamento, String dosagem, String frquencia, String duracao, Paciente paciente) {
         this.dataEmissao = dataEmissao;
         this.medicamento = medicamento;
         this.dosagem = dosagem;
-        this.frquencia = frquencia;
+        this.frequencia = frquencia;
         this.duracao = duracao;
     }
 
@@ -26,7 +26,7 @@ public class ReceitaMedica {
         this.dataEmissao = dataEmissao;
         this.medicamento = medicamento;
         this.dosagem = dosagem;
-        this.frquencia = frquencia;
+        this.frequencia = frquencia;
         this.duracao = duracao;
     }
 
@@ -74,12 +74,12 @@ public class ReceitaMedica {
         this.dosagem = dosagem;
     }
 
-    public String getFrquencia() {
-        return frquencia;
+    public String getFrequencia() {
+        return frequencia;
     }
 
-    public void setFrquencia(String frquencia) {
-        this.frquencia = frquencia;
+    public void setFrequencia(String frequencia) {
+        this.frequencia = frequencia;
     }
 
     public String getDuracao() {

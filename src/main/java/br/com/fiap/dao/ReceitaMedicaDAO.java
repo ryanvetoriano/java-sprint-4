@@ -19,15 +19,17 @@ public class ReceitaMedicaDAO {
     public String insert(ReceitaMedica receita) throws SQLException {
         String sql = "INSERT INTO RECEITA_MEDICA (DATA_EMISSAO, MEDICAMENTO, DOSAGEM, FREQUENCIA, DURACAO, ID_PACIENTE) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = minhaConexao.prepareStatement(sql);
+
         stmt.setDate(1, java.sql.Date.valueOf(receita.getDataEmissao()));
         stmt.setString(2, receita.getMedicamento());
         stmt.setString(3, receita.getDosagem());
-        stmt.setString(4, receita.getFrquencia());
+        stmt.setString(4, receita.getFrequencia());
         stmt.setString(5, receita.getDuracao());
         stmt.setInt(6, receita.getPaciente().getIdPaciente());
+
         stmt.execute();
         stmt.close();
-        return "Receita médica cadastrada com sucesso!";
+        return "Receita cadastrada com sucesso!";
     }
 
     public List<ReceitaMedica> receitasPaciente(int idPaciente) throws SQLException {
@@ -73,7 +75,7 @@ public class ReceitaMedicaDAO {
         stmt.setDate(1, java.sql.Date.valueOf(receita.getDataEmissao()));
         stmt.setString(2, receita.getMedicamento());
         stmt.setString(3, receita.getDosagem());
-        stmt.setString(4, receita.getFrquencia());
+        stmt.setString(4, receita.getFrequencia());
         stmt.setString(5, receita.getDuracao());
         stmt.setInt(6, receita.getPaciente().getIdPaciente());
         stmt.setInt(7, receita.getIdReceita());
