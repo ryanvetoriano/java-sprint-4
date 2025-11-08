@@ -1,4 +1,4 @@
-package br.com.fiap;
+package br.com.fiap.resources;
 
 import br.com.fiap.beans.Consulta;
 import br.com.fiap.bo.ConsultaBO;

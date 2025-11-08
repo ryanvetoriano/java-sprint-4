@@ -1,4 +1,4 @@
-package br.com.fiap;
+package br.com.fiap.resources;
 
 import br.com.fiap.beans.Paciente;
 import br.com.fiap.bo.PacienteBO;
