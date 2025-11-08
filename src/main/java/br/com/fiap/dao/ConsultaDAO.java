@@ -40,7 +40,7 @@ public class ConsultaDAO {
     public List<Consulta> consultasPaciente(int idPaciente) throws SQLException {
         List<Consulta> lista = new ArrayList<>();
         String sql = "SELECT c.ID_CONSULTA, c.DATA_CONSULTA, c.HORA_CONSULTA, c.STATUS_CONSULTA, c.MOTIVO, " +
-                "p.ID_PACIENTE, p.NOME_PACIENTE " + // sem vírgula no final
+                "p.ID_PACIENTE, p.NOME_PACIENTE " +
                 "FROM CONSULTA c " +
                 "JOIN PACIENTE p ON c.ID_PACIENTE = p.ID_PACIENTE " +
                 "WHERE c.ID_PACIENTE = ? " +
@@ -56,12 +56,22 @@ public class ConsultaDAO {
                     rs.getString("NOME_PACIENTE")
             );
 
+            // Trata hora nula
             String horaStr = rs.getString("HORA_CONSULTA");
-            LocalTime hora = LocalTime.parse(horaStr, DateTimeFormatter.ofPattern("HH:mm"));
+            LocalTime hora = null;
+            if (horaStr != null && !horaStr.isEmpty()) {
+                hora = LocalTime.parse(horaStr, DateTimeFormatter.ofPattern("HH:mm"));
+            } else {
+                hora = LocalTime.of(0, 0); // ou escolha outro valor padrão
+            }
+
+            // Trata data nula (opcional)
+            java.sql.Date dataSql = rs.getDate("DATA_CONSULTA");
+            java.time.LocalDate data = dataSql != null ? dataSql.toLocalDate() : null;
 
             Consulta c = new Consulta(
                     rs.getInt("ID_CONSULTA"),
-                    rs.getDate("DATA_CONSULTA").toLocalDate(),
+                    data,
                     hora,
                     rs.getString("STATUS_CONSULTA"),
                     rs.getString("MOTIVO"),
@@ -79,7 +89,7 @@ public class ConsultaDAO {
 
     public String delete(int idConsulta) throws SQLException {
         PreparedStatement stmt =
-                minhaConexao.prepareStatement("Delete from CONSULTA where ID_CONSULTA = ?");
+                minhaConexao.prepareStatement("DELETE FROM CONSULTA WHERE ID_CONSULTA = ?");
         stmt.setInt(1, idConsulta);
 
         stmt.execute();
@@ -105,7 +115,6 @@ public class ConsultaDAO {
         stmt.close();
 
         return "Consulta atualizada com sucesso!";
-
     }
 
 }

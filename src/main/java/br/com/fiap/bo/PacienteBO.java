@@ -8,36 +8,34 @@ import java.util.ArrayList;
 
 public class PacienteBO {
 
-    PacienteDAO pacienteDAO;
+    private PacienteDAO pacienteDAO;
 
-    // Selecionar
+    public PacienteBO() throws ClassNotFoundException, SQLException {
+        this.pacienteDAO = new PacienteDAO(); // inicializa o DAO corretamente
+    }
+
+    // Selecionar todos
     public ArrayList<Paciente> selecionarBo() throws ClassNotFoundException, SQLException {
-        pacienteDAO = new PacienteDAO();
-        // Regra de negocios
-
         return (ArrayList<Paciente>) pacienteDAO.select();
     }
 
     // Inserir
     public void inserirBo(Paciente paciente) throws ClassNotFoundException, SQLException {
-        PacienteDAO pacienteDAO = new PacienteDAO();
-        // Regra de negocios
         pacienteDAO.insert(paciente);
     }
 
     // Atualizar
-    public void atualizarBo (Paciente paciente) throws ClassNotFoundException, SQLException {
-        PacienteDAO pacienteDAO = new PacienteDAO();
-        // Regra de negocios
+    public void atualizarBo(Paciente paciente) throws ClassNotFoundException, SQLException {
         pacienteDAO.update(paciente);
     }
 
     // Deletar
-    public void deletarBo (String cpf) throws ClassNotFoundException, SQLException {
-        PacienteDAO pacienteDAO = new PacienteDAO();
-        // Regra de negocios
+    public void deletarBo(String cpf) throws ClassNotFoundException, SQLException {
         pacienteDAO.delete(cpf);
     }
 
-
+    // Buscar login pelo CPF
+    public Paciente buscarLogin(String cpf) throws SQLException, ClassNotFoundException {
+        return pacienteDAO.buscarLogin(cpf);
+    }
 }
